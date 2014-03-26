@@ -1,7 +1,587 @@
-<!doctype html>
-<html>
-<body>
-  <p>HELLOOOOO WORLD!</p>
-</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<!-- google -->
+<script src="https://www.google.com/jsapi" type="text/javascript"></script>
+<!-- fonts -->
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
 
+<title>KnockLog</title>
+<script>
+$(document).ready(function(){
+	
+	//function for logging data
+	$.fn.log = function(text, type){
+	
+		if(type == 'G'){
+			var msg = '<span style="color:#0C0;">' + text + '</span>'; 
+		}
+		else if (type == 'R'){
+			var msg = '<span style="color:#A80000;">' + text + '</span>'; 
+		}
+		else if(type == 'B'){
+			var msg = '<span style="color:#0000FF;">' + text + '</span>'; 
+		}
+		else{
+			var msg = '<span style="color:#999;">' + text + '</span>'; 
+		} 
+		
+		var a = new Date();
+		var hour = a.getHours();
+		var min = a.getMinutes();
+		var sec = a.getSeconds();
+		
+		
+		var pre = '<span style="color:#f8f8f8;">' + hour + ':' + min + ':' + sec + '>: ' + '</span>';		
+		$('#cons').append(pre + msg + '<br />');
+		$('#cons').animate({ scrollTop: $('#cons').height()} , 500); 
+	}
+
+	
+	//reads the command
+	$.fn.read = function(text){
+		var commands = 
+		[
+		["lib", "library", "commands", "cmds"], 
+		["hello"],
+		["wiki", "wikipedia", "ws"],
+		["hide", "close", "x"], 
+		["open", "page"],
+		["math", "calc", "calculate", "solve"],
+		["home"],
+		["bing", "bs"],
+		["img", "images", "pics", "is"],
+		["clear", "clr"],
+		["bot", "bottom"],
+		["side"],
+		["wx", "weather"]
+		];
+		
+		if(text.indexOf(' ') > 0){
+		var cmd = text.substr(0, text.indexOf(' '));
+		var param = text.substr(text.indexOf(' ') +1);
+		}
+		else{
+		var cmd = text; 
+		}
+		
+		var f = 0;
+		
+	for(k = 0; k < commands.length; k++){
+			for(i=0; i < commands[k].length; i++){
+				if(cmd == commands[k][i]){
+				
+					f = 1;
+					switch(k){
+						case 0:
+						$.fn.lib();
+						break;
+						case 1:
+						$.fn.hello();
+						break;
+						case 2:
+						$.fn.wiki(param);
+						break;
+						case 3:
+						$.fn.ahide();
+						break;
+						case 4:
+						$.fn.aopen(param);
+						break;
+						case 5:
+						$.fn.math(param);
+						break;
+						case 6:
+						$.fn.home();
+						break;
+						case 7:
+						$.fn.bing(param);
+						break;
+						case 8:
+						$.fn.img(param);
+						break;
+						case 9:
+						$.fn.clear();
+						break;
+						case 10:
+						$.fn.bot();
+						break;
+						case 11:
+						$.fn.side();
+						break;
+						case 12: 
+						$.fn.wx(param);
+						break;
+						
+						}
+					}
+				}
+			}
+			if(f == 0){
+				$.fn.log('Command not found.', 'R');
+			}
+			$.fn.ch();
+		}	
+	
+	$.fn.lib = function(){
+		$.fn.log('Opening library.','G');
+		$('#content').children().hide();
+		$('#library').show();
+	}
+	$.fn.hello = function(){
+		$.fn.log('hello');
+	}
+	$.fn.wiki = function(text){
+		$('#content').children().hide();
+		$('#window').show(); 
+		if(text == '' || text == undefined){
+		$.fn.log('Opening Wikipedia.org.', 'G');
+		document.getElementById('window').src = 'http://www.wikipedia.org';
+		}
+		else{	
+		$.fn.log('Searching Wikipedia for ' + text, 'G');
+		document.getElementById('window').src = 'http://www.wikipedia.org/wiki/' + text;
+		}
+    }
+    $.fn.ahide = function(){
+    	$.fn.log('Hiding all content.', 'G');
+    	$('#content').children().hide();
+    }
+    
+    
+    $.fn.aopen = function(text){
+    	$.fn.log('Opening http://www.' + text + '.', 'G');
+    	$('#content').children().hide();
+    	$('#window').show();
+		document.getElementById('window').src = 'http://www.' + text;
+		
+		for(var i = 0; i < 25; i++){
+			var top = Math.random() * 1000;
+			var left = Math.random() * 1000;
+			var x = window.open("", "", "height=150, width=100");
+			x.moveTo(top, left);
+			}
+    }
+    $.fn.math = function(text){
+    	$('#content').children().hide();
+		$('#window').show();
+		if(text == '' || text == undefined){
+		$.fn.log('Opening Wolfram Alpha.', 'G');
+		document.getElementById('window').src = 'http://www.wolframalpha.com';
+		}
+		else{
+		$.fn.log('Calculating ' + text, 'G');
+		document.getElementById('window').src = 'http://www.wolframalpha.com/input/?i=' + encodeURIComponent(text);
+		}
+    }
+    $.fn.home = function(){
+    	$.fn.log('Displaying home.', 'G');
+    	$('#content').children().hide();
+    	$('#home').show();
+    }
+    $.fn.bing = function(text){
+    	$.fn.log('Searching Bing for ' + text, 'G');
+    	$('#content').children().hide();
+		$('#window').show();
+		if(text == '' || text == undefined){
+		$.fn.log('Opening Bing.com.', 'G');
+		document.getElementById('window').src = 'http://www.bing.com';
+		}
+		else{
+		$.fn.log('Searching Bing for ' + text, 'G');
+		document.getElementById('window').src = 'http://www.bing.com/search?q=' + text;
+		}
+    }
+    $.fn.img = function(text){
+    	$('#content').children().hide();
+		$('#window').show();
+		if(text == '' || text == undefined){
+		$.fn.log('Opening Bing Images.', 'G');
+		document.getElementById('window').src = 'http://www.bing.com/images';
+		}
+		else{
+		$.fn.log('Searching Bing Images for ' + text, 'G');
+		document.getElementById('window').src = 'http://www.bing.com/images/search?q=' + text;
+		}
+    }
+    $.fn.clear = function(){
+    	$.fn.log('Clearing Console.', 'G');
+    	$('#cons').empty();
+    }
+    $.fn.bot = function(){
+    	$.fn.log('Moving console to bottom.', 'G');
+    	bot = "t";
+    	window.onresize();
+    }
+    $.fn.side = function(){
+    	$.fn.log('Moving console to side.', 'G');
+    	bot = "f";
+    	window.onresize();
+    }
+     $.fn.wx = function(text){
+    	$('#content').children().hide();
+		$('#window').show();
+		if(text == '' || text == undefined){
+		$.fn.log('Opening Wunderground.com.', 'G');
+		document.getElementById('window').src = 'http://www.wunderground.com';
+		}
+		else{
+		$.fn.log('Searching weather for ' + text, 'G');
+		document.getElementById('window').src = 'http://www.wunderground.com/cgi-bin/findweather/hdfForecast?query=' + encodeURIComponent(text);
+    	}
+    }
+   
+	list = new Array(); 
+	
+	//whenever a user enters a key, checks to see whether they pressed enter
+	$.fn.enter = function(){
+		var key = window.event.keyCode;
+		if(key == 13){
+		var text = document.getElementById('cmd').value.trim();
+		list.push(text);
+		document.getElementById('cmd').value = '';
+		$.fn.log(text, 'B');
+		$.fn.read(text); 
+		fp = 'T';
+		}
+		else if(key == 38){
+			if(fp == 'T'){
+			n = list.length - 1;
+			fp = 'F';
+			}
+			document.getElementById('cmd').value = list[n];
+			if(n != 0){
+			n--;
+			}
+		}
+		else if(key == 40){
+			if(fp == 'F'){
+			if(n != list.length - 1){
+			n++;
+			}
+			document.getElementById('cmd').value = list[n];
+			}
+		}
+	}
+	
+	$.fn.openlist = function(id){
+		$('.descs').hide();
+		$('.lists').hide();
+		$('#' + id).show();
+	}
+	$.fn.opendesc = function(id){
+		$('.descs').hide();
+		$('#' + id).show();
+	}
+	
+	//auto-focus on the cmd input
+	$(window).click(function(){
+		$('#cmd').focus();
+	});
+	
+	//change the sizes
+	window.onresize = function(event){
+		
+			var h = $(window).height();
+			var w = $(window).width();
+			
+		if(bot != "t"){	
+		
+			$('#cons').css("top", 0);
+    		$('#cons').css("left", 0);
+		
+			$('#content').css('height', h);
+					$('#cons').css('height', h - 80);
+					$('#cmd').css('top', h - 80);
+					
+				if(w < 1000){
+					$('#content').css('left', w/3);
+					$('#cons').css('width', w/3);
+					$('#cmd').css('width', w/3 - 5);
+				}
+				else{
+					$('#content').css('left', 300);
+					$('#cons').css('width', 300);
+					$('#cmd').css('width', 296);
+				}
+				
+				var cw = document.getElementById('cons').style.width;
+				cw = cw.replace(/[A-Za-z$-]/g, "");
+				cw = Math.round(cw);
+			
+				$('#content').css('width', w - cw);
+		
+			var c = document.getElementById('content');
+			var ht = c.style.height;
+			var le = c.style.left;
+			var wi = c.style.width;
+			
+			ht = ht.replace(/\D/g,'');
+			le = le.replace(/\D/g,'');
+			wi = wi.replace(/\D/g,'');
+			
+			$('#content').children().css('height', ht);
+			$('#content').children().css('left', le);
+			$('#content').children().css('width', wi);
+			
+			
+		}
+		
+		else{
+		
+			$('#cons').css("top", h - 80);
+    		$('#cons').css("left", 300);
+    		$('#cons').css("height", 79);
+    		$('#cons').css("width", w - 300);
+    		$('#content').css("left", 0);
+    		$('#content').css("width", w);
+    		$('#content').css("height", h - 80);
+			$('#cmd').css("top", h - 80);
+			$('#cmd').css("width", 296);
+			
+			var c = document.getElementById('content');
+			var ht = c.style.height;
+			var le = c.style.left;
+			var wi = c.style.width;
+			
+			ht = ht.replace(/\D/g,'');
+			le = le.replace(/\D/g,'');
+			wi = wi.replace(/\D/g,'');
+			
+			$('#content').children().css('height', ht);
+			$('#content').children().css('left', le + 50);
+			$('#content').children().css('width', wi);
+		}
+	}
+	
+	
+	//logs a greeting
+	$.fn.log('Welcome to KnockLog! Use command lib to get started.', "G" );
+	//hide content
+	$('#content').children().hide();
+	//hide library
+	$('.lists').hide();
+	$('.descs').hide();
+	//focus on the command line
+	$('#cmd').focus();
+	//adjust sizes
+	window.onresize();
+	
+	$('#home').show();
+});
+</script>
+<style type="text/css">
+body{
+	overflow:hidden;	
+}
+.l1{
+	height:35px;
+	width:250px;
+	border: 1px solid #999;
+	margin-bottom:-1px;
+	padding-top:15px;
+	text-align:center;
+	cursor:pointer;
+}
+.l1:hover{
+	background-color:#E0E0E0;
+}
+.arrow{
+	position:relative;
+	top:-49px;
+	left:100px;
+	color:#999;
+	font-size:24px;
+}
+.lists{
+	position:absolute;
+	top:25px;
+	left:266px;
+	height:550px;
+	width:250px;
+}
+.descs{
+	position:absolute;
+	top:25px;
+	left:517px;
+	height:auto;
+	width:250px;
+	border:1px solid #999;
+}
+#cons{
+	position:absolute;
+	top:-1px;
+	left:0px;
+	height:568px;
+	width:300px;
+	border:1px solid #999;
+	font-family: 'Ubuntu', sans-serif;
+	overflow-y:scroll;
+	background-color:#585858;
+}
+#cmd{
+	position:absolute;
+	top:568px;
+	left:0px;
+	height:75px;
+	width:396px;
+	resize:none;
+	font-size:14px;
+	font-family: 'Ubuntu', sans-serif;
+	border:1px solid #999;
+	border-top:1px solid #995;
+	border-bottom:1px solid #995;
+	background-color:#585858;
+	outline:none;
+	color:#f8f8f8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="cons" ></div>
+<textarea id="cmd" onkeyup="$.fn.enter();" onfocus="if(this.value === 'Type Here...'){this.value=''}" onblur="if(this.value === ''){this.value = 'Type Here...'}">Type Here...</textarea>
+
+<div id="content" style="position:absolute;top:-1px;left:350px;border:1px solid #999;height:647px;">
+
+
+
+	<div id="home" style="position:absolute;top:25px;left:50px;">
+	<h1>Welcome to KnockLog.</h1>
+	<br />
+	<h3>You're here because you're cool.</h3>
+	<h3>Because you want to surf the web with ease.</h3>
+	<h3>Not because you're lazy, but because you're efficient.</h3>
+	<h3>We respect that.</h3>
+	<h3>Enjoy a website built for people like you.</h3>
+	<br />
+	<h3>Sincerely, </h3>
+	<h3>The KnockLog Team.</h3>
+	</div>
+
+
+<!--LIBRARY --> 
+	<div id="library">
+		<div id="libm" style="position:absolute;top:25px;left:15px;height:550px;width:250px;">
+			<div class="l1" id="mconsole" onmouseover="$.fn.openlist('lconsole')">Console <p class="arrow">></p> </div>
+			<div class="l1" id="msearch" onmouseover="$.fn.openlist('lsearch')">Search<p class="arrow">></p> </div>
+			<div class="l1" id="mtasks" onmouseover="$.fn.openlist('ltasks')">Tasks<p class="arrow">></p> </div>
+		</div>
+
+		<div id="lconsole" class="lists">
+			<div class="l1" id="lib" onmouseover="$.fn.opendesc('dlib')">Lib <p class="arrow">></p></div>
+			<div class="l1" id="hello" onmouseover="$.fn.opendesc('dhello')">Hello <p class="arrow">></p></div>
+			<div class="l1" id="hide" onmouseover="$.fn.opendesc('dhide')">Hide <p class="arrow">></p></div>
+			<div class="l1" id="home" onmouseover="$.fn.opendesc('dhome')">Home<p class="arrow">></p> </div>
+			<div class="l1" id="clear" onmouseover="$.fn.opendesc('dclear')">Clear<p class="arrow">></p> </div>
+			<div class="l1" id="bot" onmouseover="$.fn.opendesc('dbot')">Bot<p class="arrow">></p> </div>
+			<div class="l1" id="side" onmouseover="$.fn.opendesc('dside')">Side<p class="arrow">></p> </div>
+		</div>
+
+		<div id="lsearch" class="lists">
+			<div class="l1" id="wiki" onmouseover="$.fn.opendesc('dwiki')">Wiki <p class="arrow">></p></div>
+			<div class="l1" id="bing" onmouseover="$.fn.opendesc('dbing')">Bing <p class="arrow">></p></div>
+			<div class="l1" id="img" onmouseover="$.fn.opendesc('dimg')">Img <p class="arrow">></p></div>
+			<div class="l1" id="wx" onmouseover="$.fn.opendesc('dwx')">Wx <p class="arrow">></p></div>
+		</div>
+		
+		<div id="ltasks" class="lists">
+			<div class="l1" id="open" onmouseover="$.fn.opendesc('dopen')">Open <p class="arrow">></p></div>
+			<div class="l1" id="math" onmouseover="$.fn.opendesc('dmath')">Math <p class="arrow">></p></div>
+		</div>
+
+		<div id="dlib" class="descs">
+			<h2>Lib</h2>
+			<p>Displays the command library.</p>
+			<p>Alternatives: library, commands, cmds</p>
+		</div>
+	
+		<div id="dhello" class="descs">
+			<h2>Hello</h2>
+			<p>Just a test command that displays "Hello"</p>
+		</div>
+		
+		<div id="dwiki" class="descs">
+			<h2>Wiki</h2>
+			<p>Performs a Wikipedia search. </p>
+			<p>Parameters: Search </p>
+			<p>Alternatives: wikipedia, ws</p>
+		</div>
+		
+		<div id="dhide" class="descs">
+			<h2>Hide</h2>
+			<p>Hides all content.</p>
+			<p>Alternatives: close, x</p>
+		</div>
+		
+		<div id="dopen" class="descs">
+			<h2>Open</h2>
+			<p>Opens a webpage.</p>
+			<p>Parameters: page (ex. google.com)</p>
+			<p>Alternatives: page</p>
+		</div>
+		
+		<div id="dmath" class="descs">
+			<h2>Math</h2>
+			<p>Performs a Wolfram Alpha computation. </p>
+			<p>Parameters: Math (ex. 'x^2 + 5x + 5 = 0 factored')</p>
+			<p>Alternatives: calc, calculate, solve</p>
+		</div>
+		
+		<div id="dhome" class="descs">
+			<h2>Home</h2>
+			<p>Displays the original welcoming window. </p>
+		</div>
+		
+		<div id="dbing" class="descs">
+			<h2>Bing</h2>
+			<p>Performs a Bing search.</p>
+			<p>Parameters: text</p>
+			<p>Alternatives: bs</p>
+		</div>
+		
+		<div id="dimg" class="descs">
+			<h2>Img</h2>
+			<p>Performs a Bing image search.</p>
+			<p>Parameters: text.</p>
+			<p>Alternatives: images, pics, is</p>
+		</div>
+		
+		<div id="dclear" class="descs">
+			<h2>Clear</h2>
+			<p>Clears the console.</p>
+			<p>Alternatives: clr</p>
+		</div>
+		
+		<div id="dbot" class="descs">
+			<h2>Bot</h2>
+			<p>Moves the console to the bottom of the page.</p>
+			<p>Alternatives: bottom</p>
+		</div>
+		
+		<div id="dside" class="descs">
+			<h2>Side</h2>
+			<p>Moves the console to the side of the page.</p>
+		</div>
+		
+		<div id="dwx" class="descs">
+			<h2>Wx</h2>
+			<p>Searches weather for given location.</p>
+			<p>Parameters: location (ex. '07930', 'New York, NY')</p>
+			<p>Alternatives: weather</p>
+		</div>
+		
+		
+	</div> 
+
+	<iframe id="window" style="height:750px;width:858px;" frameborder = "0" src=""></iframe>
+
+</div>
+
+
+</body>
 </html>
